@@ -6,7 +6,7 @@ module.exports = {
         weekdays: async (parent, params, context) => {
             try {
                 const days = await shift();
-                console.log({ days })
+                // console.log({ days })
                 return days;
 
             } catch (error) {

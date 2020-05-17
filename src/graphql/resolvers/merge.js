@@ -2,7 +2,7 @@ const Days = require('../../models/days');
 const User = require('../../models/user');
 const Schedule = require('../../models/schedule');
 const { dateToString } = require('../helpers/date');
-
+const _ = require('lodash')
 
 exports.createAndUpdateSchedule = async (params) => {
     try {
@@ -10,7 +10,6 @@ exports.createAndUpdateSchedule = async (params) => {
         await removeUsers(params)
         const updated = ids.map(async (id) => {
             const day = await getDayById(id);
-            console.log({ day })
             day.users.push(userId)
             day.save()
         })
@@ -26,24 +25,23 @@ exports.createAndUpdateSchedule = async (params) => {
 
 const removeUsers = async (params) => {
     const days = await Days.find();
-    const eachdays = days.filter(day => {
-        day.users.filter(id => id !== params.userId)
+    await days.forEach(day => {
+        let users = day.users;
+        [...new Set(users)]
+        users = users.filter((item, index) => users.indexOf(item) == index);
+        users = users.reduce((unique, item) => 
+            unique.includes(item) ? unique : [...unique, item], [])
+
+        day.users = users;
         day.save();
     })
+    // console.log({ days }, 'removeUsers -> eachdays')
 }
 
-exports.shift = async () => {
-    try {
-        const events = await findWeekDays();
-        return events.map(event => {
-            return transformWeekDays(event);
-        })
-    } catch (error) {
-        throw error;
-    }
-}
+exports.shift = async () => await findWeekDays()
 
 const transformWeekDays = event => {
+    console.log('Event transform', event._doc)
     return {
         ...event._doc,
         users: findUsersByIds.bind(this, event._doc.users)
@@ -56,30 +54,6 @@ const transformSchedule = event => {
         users: findUsersByIds.bind(this, event._doc.users)
     }
 }
-
-// const singleEvent = async (eventId) => {
-//     try {
-//         const event = await Event.findById(eventId);
-//         return transformEvent(event);
-//     } catch (error) {
-//         throw new Error('Event not found')
-//     }
-// }
-
-// const events = async (ids) => {
-//     try {
-//         const events = await Event.find({ _id: { $in: ids } });
-//         return events.map(event => {
-//             return transformEvent(event);
-//         })
-//     } catch (error) {
-//         throw error;
-//     }
-// }
-
-
-
-
 
 const createWeek = async (params) => {
     try {
@@ -154,33 +128,4 @@ const findWeekDays = async () => await Days.find().populate('users');
 
 exports.createWeek = createWeek;
 exports.addUserSchedule = addUserSchedule;
-// exports.findAllSchedules = findAllSchedules;
 
-
-
-// const user = async (userId) => {
-//     try {
-//         const user = await User.findById(userId);
-//         return {
-//             ...user._doc,
-//             // schedule: movies.bind(this, user._doc.createdMovies)
-//         }
-//     } catch (error) {
-//         throw new Error('User not found')
-//     }
-// }
-
-
-// const movies = async (ids) => {
-//     try {
-//         const movies = await Movie.find({ _id: { $in: ids } });
-//         return movies.map(movie => {
-//             return transformMovie(movie);
-//         })
-//     } catch (error) {
-//         throw error;
-//     }
-// }
-
-// exports.transformMovie = transformMovie;
-// exports.user = user;

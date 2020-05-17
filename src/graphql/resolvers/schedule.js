@@ -32,22 +32,9 @@ module.exports = {
             })
 
             try {
-                const day = await Schedule.findOne({ user: userId });
-                console.log('Got schedule', day)
-
-                if(day) throw new Error('No duplicates')
-                
+                await Schedule.findOneAndDelete({ user: userId });
                 const user = await User.updateOne({ _id: userId }, { schedule: ids })
-                const results = await createAndUpdateSchedule(params);
                 schedule.save();
-
-                // todo: think about how u gonna create a shift
-                // const __sched = await addUserSchedule(params)
-                // console.log(__sched.newSchedule());
-
-                // add user to each day and days to each user
-
-                console.log({ user, results })
                 return true;
             } catch (error) {
                 throw error;
