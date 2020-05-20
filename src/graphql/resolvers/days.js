@@ -3,25 +3,13 @@ const { createWeek, shift } = require('./merge')
 
 module.exports = {
     Query: {
-        weekdays: async (parent, params, context) => {
-            try {
-                const days = await shift();
-                // console.log({ days })
-                return days;
-
-            } catch (error) {
-                throw error;
-            }
-        }
+        weekdays: async (parent, params, context) => await Days.find()
     },
 
     Mutation: {
         addDays: async (parent, params, context) => {
             try {
-                const days = params.days;
-                await createWeek(days);
-                console.log({ days })
-
+                await createWeek();
                 return true;
             } catch (error) {
                 throw error

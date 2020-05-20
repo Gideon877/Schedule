@@ -7,35 +7,32 @@ const _ = require('lodash')
 exports.createAndUpdateSchedule = async (params) => {
     try {
         const { userId, ids } = params;
-        await removeUsers(params)
-        const updated = ids.map(async (id) => {
-            const day = await getDayById(id);
-            day.users.push(userId)
-            day.save()
-        })
-
-        return updated;
-
-
+        await removeUsersFromWeekDays(params);
+        return await updateUsersList(userId, ids);
     } catch (error) {
         console.log(error);
         throw error
     }
 }
 
-const removeUsers = async (params) => {
-    const days = await Days.find();
-    await days.forEach(day => {
-        let users = day.users;
-        [...new Set(users)]
-        users = users.filter((item, index) => users.indexOf(item) == index);
-        users = users.reduce((unique, item) => 
-            unique.includes(item) ? unique : [...unique, item], [])
+const updateUsersList = async (userId, dayListIds) => {
+    return await dayListIds.forEach(async (_id) => {
+        const current = await Days.findOne({ _id });
+        current.users.pull(userId)
+        current.users.push(userId)
+        await current.save();
+    });
 
-        day.users = users;
-        day.save();
+}
+
+const removeUsersFromWeekDays = async (userId) => {
+    const days = await Days.find(async (err, days) => {
+        if (err) throw err;
+        await days.forEach(day => {
+            day.users.pull(userId)
+            day.save()
+        })
     })
-    // console.log({ days }, 'removeUsers -> eachdays')
 }
 
 exports.shift = async () => await findWeekDays()
@@ -55,22 +52,21 @@ const transformSchedule = event => {
     }
 }
 
-const createWeek = async (params) => {
+const createWeek = async () => {
     try {
-        const weekDays = params.map(day => {
+        const weekDay = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        const isAdded = await Days.find();
+        if (isAdded.length) throw new Error('Week days already created')
+        const weekDays = weekDay.map(day => {
             return new Days({
                 name: day
             })
         })
+        // console.log({ weekDays })
+
         await Days.insertMany(weekDays);
-        const weekSchedule = weekDays.map(day => {
-            return new Schedule({
-                day
-            })
-        });
-        await Schedule.insertMany(weekSchedule);
     } catch (error) {
-        throw new Error('Failed to create week days')
+        throw new Error('Failed to create week days\n' + error)
     }
 }
 

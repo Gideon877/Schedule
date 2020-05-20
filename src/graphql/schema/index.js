@@ -4,10 +4,19 @@ module.exports = gql`
     
     type Schedule {
         _id: ID!
-        day: Day!
+        name: String!
         users: [User!]
         createdAt: String!
         updatedAt: String!
+    }
+
+    type UserSchedule {
+        _id: ID!
+        days: [Day!]
+        user: ID!
+        createdAt: String!
+        updatedAt: String!
+
     }
 
     type Chats {
@@ -28,7 +37,7 @@ module.exports = gql`
     type Day {
         _id: ID!
         name: String!
-        users: [User!]
+        # users: [User!]
     }
 
     type Message {
@@ -52,7 +61,7 @@ module.exports = gql`
         createdAt: String!
         updatedAt: String!
         userType: String
-        # schedule: Schedule
+        schedule: [Schedule!]
     }
 
     input UserInput {
@@ -73,18 +82,17 @@ module.exports = gql`
         users: [User!]!
         weekdays: [Day!]!
         getUser(userId: ID!): User!
-        # schedule: [Schedule!]!
-        # getUserSchedule(userId: ID!): Schedule!
+        schedule: [Schedule]
+        getUserSchedule(userId: ID!): UserSchedule
     }
 
     type Mutation {
         addUser(user: UserInput): Boolean
-        addDays(days: [String!]): Boolean
+        addDays: Boolean
         disableUser(userId: ID!, active: Boolean): Boolean 
         signIn(username: String!, password: String!): Auth!
         updateUser(user: UserInput): Boolean
         createSchedule(ids: [ID!]!, userId: ID!): Boolean
-        # updateUserSchedule(userId: ID!, days: [ID!]!): Boolean
     }
     schema {
         query: Query,

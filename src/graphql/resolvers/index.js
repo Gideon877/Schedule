@@ -14,8 +14,8 @@ const Resolver = {
     Query: {
         users,
         getUser,
-        // schedule,
-        // getUserSchedule,
+        schedule,
+        getUserSchedule,
         weekdays
     },
     Mutation: {

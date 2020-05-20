@@ -3,19 +3,28 @@ const bcrypt = require('bcrypt');
 const Schedule = require('../../models/schedule');
 const Days = require('../../models/days');
 const User = require('../../models/user');
+const _ = require('lodash')
 // const PlayList = require('../../models/playlist');
 const { addUserSchedule, createAndUpdateSchedule } = require('./merge');
 
 
 module.exports = {
     Query: {
-        schedule: async (args, req) => {
-            if (!req.isAuth) {
-                throw new Error('Unauthencticated');
-            }
-
+        getUserSchedule: async (_, params, context) => {
             try {
-                return true // await findAllSchedules();
+                // if (!context.isAuth) throw new Error('Unauthencticated');
+                const schedule = await Schedule.findOne({ user: params.userId }).populate('days')
+                return schedule
+            } catch (error) {
+                console.log(error)
+                throw error
+            }
+        },
+        schedule: async (args, req) => {
+            try {
+                // if (!req.isAuth) throw new Error('Unauthencticated');
+                const days = await Days.find().populate('users')
+                return days;
             } catch (error) {
                 throw error
             }
@@ -26,15 +35,19 @@ module.exports = {
     Mutation: {
         createSchedule: async (parent, params, context) => {
             const { ids, userId } = params;
-            const schedule = new Schedule({
-                user: userId,
-                days: ids
-            })
 
             try {
-                await Schedule.findOneAndDelete({ user: userId });
-                const user = await User.updateOne({ _id: userId }, { schedule: ids })
-                schedule.save();
+                // if (!context.isAuth) throw new Error(context.message);
+                let schedule = await Schedule.findOneAndUpdate({ user: userId }, { days: ids });
+                
+                if (_.isNull(schedule)) {
+                    schedule = new Schedule({ user: userId, days: ids })
+                    await schedule.save();
+                }
+                console.log({schedule});
+
+                await User.updateOne({ _id: userId }, { schedule: ids });
+                await createAndUpdateSchedule(params)
                 return true;
             } catch (error) {
                 throw error;
