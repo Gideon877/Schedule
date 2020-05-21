@@ -44,7 +44,6 @@ module.exports = {
                     schedule = new Schedule({ user: userId, days: ids })
                     await schedule.save();
                 }
-                console.log({schedule});
 
                 await User.updateOne({ _id: userId }, { schedule: ids });
                 await createAndUpdateSchedule(params)

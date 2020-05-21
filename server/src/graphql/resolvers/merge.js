@@ -124,4 +124,3 @@ const findWeekDays = async () => await Days.find().populate('users');
 
 exports.createWeek = createWeek;
 exports.addUserSchedule = addUserSchedule;
-
