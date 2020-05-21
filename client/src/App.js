@@ -8,17 +8,16 @@ import {
 import { ToastProvider } from 'react-toast-notifications';
 
 import { AuthContext } from './context/auth-context';
-import UserHome from './component/user/UserHome';
+import UserMainLayout from './component/user/UserMainLayout';
 
 const _ = require('lodash');
 
 const App = () => {
 	const [state, setState] = useState({
-		userId: null,
+		userId: '5ec54c09a35830577ff9c38d',
 		token: null,
 		signedUser: null
 	});
-
 	const login = (userId, token, tokenExpiration) => {
 		setState({ token, userId });
 		localStorage.clear();
@@ -39,7 +38,7 @@ const App = () => {
 		}}>
 			<ToastProvider>
 				<Switch>
-					<Route path='' component={UserHome} />
+					<Route path='' render={() => <UserMainLayout userId={state.userId} />} />
 				</Switch>
 			</ToastProvider>
 		</AuthContext.Provider>

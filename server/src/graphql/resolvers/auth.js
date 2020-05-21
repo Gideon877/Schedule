@@ -84,11 +84,14 @@ module.exports = {
 
         updateUser: async (parent, params, context) => {
             try {
-                if (context.code === 404) throw new Error(context.message);
+                console.log({ context }, ' ---updateUser---');
+                // if (context.code === 404) throw new Error(context.message);
                 // todo: use auth token to get userId
                 await User.findOneAndUpdate({ username: params.user.username }, params.user);
                 return true;
             } catch (error) {
+                console.log(error);
+                
                 throw new Error(error);
                 return false;
             }
