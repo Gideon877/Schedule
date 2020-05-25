@@ -23,7 +23,7 @@ module.exports = gql`
 
     type Chat {
         _id: ID!
-        messages: [Message!]!
+        messages: [Message!]
         sender: User! 
         receiver: User!
         createdAt: String!

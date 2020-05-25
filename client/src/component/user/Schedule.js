@@ -61,8 +61,8 @@ const Schedule = () => {
         addToast(message, { appearance: 'success', autoDismiss: true });
     }
 
-    const onAddDay = (event) => {
-        updateSchedule({
+    const onAddDay = async (event) => {
+        await updateSchedule({
             variables: {
                 userId, ids: [...dayIds, event]
             }
@@ -89,10 +89,8 @@ const Schedule = () => {
     }
 
 
-    // const weekdays = data.schedule;
-
     return <Row>
-        <Col span={8}>
+        <Col span={4}>
             <List
                 itemLayout="horizontal"
                 dataSource={data.schedule}
@@ -102,10 +100,10 @@ const Schedule = () => {
                             icon={<ClockCircleTwoTone />}
                             title={item.name}
                             description={<div id={item._id}>
-                                <Progress type="circle" percent={item.percentage} width={60} /> {' '}
+                                <Progress type="circle" percent={item.percentage} width={60} id={item._id} /> {'  '}
                                 <ButtonGroup>
-                                    <Button disabled={!dayIds.includes(item._id)} icon={<MinusOutlined onClick={() => onRemoveDay(item._id)} />} />
-                                    <Button disabled={dayIds.includes(item._id)} icon={<PlusOutlined onClick={() => onAddDay(item._id)} />} />
+                                    <Button id={item._id} disabled={!dayIds.includes(item._id)} icon={<MinusOutlined onClick={() => onRemoveDay(item._id)} />} />
+                                    <Button id={item._id} disabled={dayIds.includes(item._id)} icon={<PlusOutlined onClick={() => onAddDay(item._id)} />} />
                                 </ButtonGroup>
                             </div>}
                         />
@@ -113,7 +111,8 @@ const Schedule = () => {
                 )}
             />
         </Col>
-        <Col span={4}>
+
+        <Col span={8}>
             <List
                 itemLayout='vertical'
                 dataSource={days}

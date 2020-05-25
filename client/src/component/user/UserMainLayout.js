@@ -14,6 +14,7 @@ import UpdateUser from './UpdateUser';
 import Connections from '../connections/Connections';
 
 import { ConnectionTypePage } from '../../helpers/constants'
+import Chats from '../chats/Chats';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -113,11 +114,11 @@ const UserMainLayout = ({userId}) => {
                                 case '1':
                                     return <h4>Home Page</h4>
                                 case '2':
-                                    return <h4>Inbox</h4>
+                                    return <Chats />
                                 case '3':
                                     return <h4>Account</h4>
                                 case '4':
-                                    return <Schedule refetch={refetch} schedule={schedule} weekdays={weekdays} />
+                                    return <Schedule />
                                 case '5':
                                     return <UpdateUser userId={userId} />
                                 case '6':

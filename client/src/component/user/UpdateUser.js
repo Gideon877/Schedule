@@ -79,6 +79,7 @@ const UpdateUser = ({ userId }) => {
         render={({ errors, status, touched }) => {
 
             return <Row>
+            <Col span={8}></Col>
                 <Col span={8}>
                     <Form layout="vertical">
                         <div className="form-group">
@@ -115,6 +116,7 @@ const UpdateUser = ({ userId }) => {
                 **/}
                     </Form>
                 </Col>
+                <Col span={8}></Col>
             </Row>
         }}
     />
