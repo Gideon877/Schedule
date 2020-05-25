@@ -6,15 +6,14 @@ const User = require('../../models/user');
 const _ = require('lodash')
 // const PlayList = require('../../models/playlist');
 const { addUserSchedule, createAndUpdateSchedule } = require('./merge');
-
+const { sortWeekDays } = require('../helpers/sortWeekDays')
 
 module.exports = {
     Query: {
         getUserSchedule: async (_, params, context) => {
             try {
                 // if (!context.isAuth) throw new Error('Unauthencticated');
-                const schedule = await Schedule.findOne({ user: params.userId }).populate('days')
-                return schedule
+                return await Schedule.findOne({ user: params.userId }).populate('days')
             } catch (error) {
                 console.log(error)
                 throw error
@@ -24,7 +23,7 @@ module.exports = {
             try {
                 // if (!req.isAuth) throw new Error('Unauthencticated');
                 const days = await Days.find().populate('users')
-                return days;
+                return sortWeekDays(days)
             } catch (error) {
                 throw error
             }
