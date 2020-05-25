@@ -6,13 +6,11 @@ import { Layout, Menu, Breadcrumb } from 'antd';
 import {
     InboxOutlined,
     HomeOutlined,
-    FileOutlined,
     TeamOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import Schedule from './Schedule';
 import UpdateUser from './UpdateUser';
-import UploadFile from './UploadFile'
 import Connections from '../connections/Connections';
 
 import { ConnectionTypePage } from '../../helpers/constants'
@@ -61,7 +59,7 @@ const UserMainLayout = ({userId}) => {
 
     const [activeKey, setActiveKey] = useState('4')
 
-    const { loading, error, data, refetch } = useQuery(GET_USER, {
+    const { loading, data, refetch } = useQuery(GET_USER, {
         variables: {
             userId
         }

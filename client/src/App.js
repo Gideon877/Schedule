@@ -10,11 +10,10 @@ import { ToastProvider } from 'react-toast-notifications';
 import { AuthContext } from './context/auth-context';
 import UserMainLayout from './component/user/UserMainLayout';
 
-const _ = require('lodash');
 
 const App = () => {
 	const [state, setState] = useState({
-		userId: '5ec54c09a35830577ff9c38d',
+		userId: '5ec56496cb88f06f8dfbef1b',
 		token: null,
 		signedUser: null
 	});

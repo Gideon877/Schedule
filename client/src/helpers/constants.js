@@ -1,4 +1,3 @@
-
 const ConnectionType = {
     Connected: "CONNECTED"
 }
@@ -9,5 +8,5 @@ const ConnectionTypePage = {
 }
 
 module.exports = {
-    ConnectionTypePage
+    ConnectionTypePage, ConnectionType
 }

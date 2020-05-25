@@ -4,9 +4,8 @@ const Schedule = require('../../models/schedule');
 const Days = require('../../models/days');
 const User = require('../../models/user');
 const _ = require('lodash')
-// const PlayList = require('../../models/playlist');
+const { sortWeekDays } = require('../helpers/sortWeekDays');
 const { addUserSchedule, createAndUpdateSchedule } = require('./merge');
-const { sortWeekDays } = require('../helpers/sortWeekDays')
 
 module.exports = {
     Query: {
@@ -23,7 +22,14 @@ module.exports = {
             try {
                 // if (!req.isAuth) throw new Error('Unauthencticated');
                 const days = await Days.find().populate('users')
-                return sortWeekDays(days)
+                const sort = days.map(day => {
+                    return {
+                        ...day._doc,
+                        count: _.size(day.users),
+                        percentage: ((_.size(day.users) / 5) * 100)
+                    }
+                })
+                return sortWeekDays(sort);
             } catch (error) {
                 throw error
             }
@@ -38,7 +44,7 @@ module.exports = {
             try {
                 // if (!context.isAuth) throw new Error(context.message);
                 let schedule = await Schedule.findOneAndUpdate({ user: userId }, { days: ids });
-                
+
                 if (_.isNull(schedule)) {
                     schedule = new Schedule({ user: userId, days: ids })
                     await schedule.save();

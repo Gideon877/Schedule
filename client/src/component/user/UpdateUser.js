@@ -1,15 +1,11 @@
 import React from 'react';
-import { List, Avatar, Form, Row, Col } from 'antd';
+import { Form, Row, Col } from 'antd';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { useToasts } from 'react-toast-notifications';
 
-const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-};
 
 const GET_USER = gql`
     query getUser($userId: ID!) {
@@ -33,7 +29,7 @@ const UpdateUser = ({ userId }) => {
     const [updateUser] = useMutation(UPDATE_USER);
     const { addToast } = useToasts();
 
-    const { loading, error, data, refetch } = useQuery(GET_USER, {
+    const { loading, data, refetch } = useQuery(GET_USER, {
         variables: {
             userId
         }

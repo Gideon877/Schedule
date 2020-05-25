@@ -1,6 +1,5 @@
-import React, { Fragment, useState, useContext } from 'react';
-import { List, Avatar, Button, Row, Col, Progress } from 'antd';
-import { Table, Radio, Divider, Timeline } from 'antd';
+import React, { useContext } from 'react';
+import { List, Button, Row, Col, Progress } from 'antd';
 import { ClockCircleTwoTone, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import gql from 'graphql-tag';
 import { useMutation, useQuery } from 'react-apollo';
@@ -8,16 +7,7 @@ import { useToasts } from 'react-toast-notifications'
 import { AuthContext } from '../../context/auth-context';
 import { sortWeekDays } from '../../helpers/lib'
 
-const { Column, ColumnGroup } = Table;
-const columns = [
-    {
-        title: 'Day',
-        dataIndex: 'name',
-    }
-];
-
 const ButtonGroup = Button.Group;
-const _ = require('lodash');
 
 const ADD_SCHEDULE = gql`
     mutation createSchedule($userId: ID!, $ids: [ID!]!) {
@@ -30,6 +20,8 @@ const WEEK_SCHEDULE = gql`
         schedule {
             name
             _id
+            percentage
+            count
             users {
                 _id
                 username
@@ -53,7 +45,7 @@ const Schedule = () => {
     const { addToast } = useToasts();
     const userId = useContext(AuthContext).userId
     const [updateSchedule] = useMutation(ADD_SCHEDULE);
-    const { loading, error, data, refetch } = useQuery(WEEK_SCHEDULE, {
+    const { loading, data, refetch } = useQuery(WEEK_SCHEDULE, {
         variables: {
             userId
         }
@@ -64,15 +56,19 @@ const Schedule = () => {
     const { days, user } = data.getUserSchedule;
     const dayIds = sortWeekDays(days).map(day => day._id)
 
+    const onSuccess = message => {
+        refetch();
+        addToast(message, { appearance: 'success', autoDismiss: true });
+    }
+
     const onAddDay = (event) => {
         updateSchedule({
             variables: {
                 userId, ids: [...dayIds, event]
             }
         }).then(({ data }) => (data.createSchedule)
-            ? addToast('Added day from schedule', { appearance: 'success', autoDismiss: true })
+            ? onSuccess('Added day from schedule')
             : addToast('Failed to add schedule', { autoDismiss: true, appearance: 'error' })
-        ).then(() => refetch()
         ).catch((err) => {
             addToast(err.message, { autoDismiss: true, appearance: 'error' })
         });
@@ -81,34 +77,32 @@ const Schedule = () => {
     const onRemoveDay = (event) => {
         updateSchedule({
             variables: {
-                userId: user, ids: dayIds.filter(id => id != event)
+                userId: user, ids: dayIds.filter(id => id !== event)
             }
         })
             .then(({ data }) => (data.createSchedule)
-                ? addToast('Removed day from schedule', { appearance: 'success', autoDismiss: true })
+                ? onSuccess('Removed day from schedule')
                 : addToast('Failed to remove schedule', { autoDismiss: true, appearance: 'error' })
-            ).then(() => refetch()
             ).catch((err) => {
                 addToast(err.message, { autoDismiss: true, appearance: 'error' })
             });
     }
 
 
-    const weekdays = data.schedule;
+    // const weekdays = data.schedule;
 
     return <Row>
         <Col span={8}>
             <List
                 itemLayout="horizontal"
-                dataSource={weekdays}
+                dataSource={data.schedule}
                 renderItem={item => (
-                    <List.Item>
+                    <List.Item id={item._id}>
                         <List.Item.Meta
                             icon={<ClockCircleTwoTone />}
-                            title={<a href="https://ant.design">{item.name}</a>}
-                            description={<div>
-                                <Progress type="circle" percent={((_.size(item.users) / 5) * 100)} width={60} /> {' '}
-
+                            title={item.name}
+                            description={<div id={item._id}>
+                                <Progress type="circle" percent={item.percentage} width={60} /> {' '}
                                 <ButtonGroup>
                                     <Button disabled={!dayIds.includes(item._id)} icon={<MinusOutlined onClick={() => onRemoveDay(item._id)} />} />
                                     <Button disabled={dayIds.includes(item._id)} icon={<PlusOutlined onClick={() => onAddDay(item._id)} />} />
@@ -127,7 +121,7 @@ const Schedule = () => {
                     <List.Item>
                         <List.Item.Meta
                             icon={<ClockCircleTwoTone />}
-                            title={<a href='#'>{item.name}</a>}
+                            title={item.name}
                         />
                     </List.Item>
                 )}

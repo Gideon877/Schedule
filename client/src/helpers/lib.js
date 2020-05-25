@@ -13,12 +13,9 @@ const sorter = {
  * @param {Array} data - array of objects
  * @param {String} data.name - weekday name
  */
-const sortWeekDays = data => {
-console.log({data})
-    return data.sort((a, b) =>
-        sorter[a.name.toLowerCase()] - sorter[b.name.toLowerCase()]
-    )
-}
+const sortWeekDays = data => data.sort((a, b) =>
+    sorter[a.name.toLowerCase()] - sorter[b.name.toLowerCase()]
+)
     
 
 module.exports = {

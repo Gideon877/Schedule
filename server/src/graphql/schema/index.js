@@ -8,6 +8,8 @@ module.exports = gql`
         users: [User!]
         createdAt: String!
         updatedAt: String!
+        count: Int
+        percentage: Int
     }
 
     type UserSchedule {
