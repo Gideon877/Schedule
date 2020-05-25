@@ -9,11 +9,11 @@ const Chats = new Schema({
             ref: 'Message'
         }
     ],
-    owner: {
+    sender: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
-    participant: {
+    },
+    receiver: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     }

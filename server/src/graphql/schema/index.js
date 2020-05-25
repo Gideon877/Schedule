@@ -21,11 +21,12 @@ module.exports = gql`
 
     }
 
-    type Chats {
-        createdAt: String!
+    type Chat {
+        _id: ID!
         messages: [Message!]!
-        owner: User! 
-        participant: User!
+        sender: User! 
+        receiver: User!
+        createdAt: String!
         updatedAt: String!
     }
 
@@ -44,9 +45,9 @@ module.exports = gql`
 
     type Message {
         _id: ID!
-        text: String!
-        sentBy: User!
-        sentTo: User!
+        message: String!
+        sender: User!
+        receiver: User!
         createdAt: String!
         updatedAt: String!
     }
@@ -94,6 +95,9 @@ module.exports = gql`
         getUser(userId: ID!): User!
         schedule: [Schedule]
         getUserSchedule(userId: ID!): UserSchedule
+        messages: [Message!]!
+        chats: [Chat!]!
+        getUserChats(userId: ID!): Chat!
     }
 
     type Mutation {
@@ -103,7 +107,8 @@ module.exports = gql`
         signIn(username: String!, password: String!): Auth!
         updateUser(user: UserInput): Boolean
         createSchedule(ids: [ID!]!, userId: ID!): Boolean
-        # addFile(file: Upload!): File
+        createMessage(sender: ID! receiver: ID! message: String!): Message!
+        createChat(sender: ID! receiver: ID!): Chat!
     }
     schema {
         query: Query,

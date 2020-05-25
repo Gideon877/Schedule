@@ -1,6 +1,7 @@
 const Days = require('../../models/days');
 const User = require('../../models/user');
 const Schedule = require('../../models/schedule');
+const Chats = require('../../models/chats');
 const { dateToString } = require('../helpers/date');
 const _ = require('lodash')
 const mongoose = require('mongoose');
@@ -124,5 +125,14 @@ const getSchedule = async () => await Schedule.find()
 const findUsersByIds = async (ids) => await Schedule.find({ _id: { $in: ids } });
 const findWeekDays = async () => await Days.find().populate('users');
 
+async function handleCreateChats(userId) {
+   const userChat = await Chats.findOne({ sender: userId });
+    if (userChat) {
+        return userChat;
+    }
+    return await Chats.findOne({ receiver: userId });
+}
+
 exports.createWeek = createWeek;
 exports.addUserSchedule = addUserSchedule;
+exports.handleCreateChats = handleCreateChats;
