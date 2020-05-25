@@ -78,6 +78,14 @@ module.exports = gql`
         tokenExpiration: Int!
     }
 
+    type File {
+        _id: ID!
+        path: String!
+        filename: String!
+        mimetype: String!
+        encoding: String!
+    }
+
     type Query {
         users: [User!]!
         weekdays: [Day!]!
@@ -93,6 +101,7 @@ module.exports = gql`
         signIn(username: String!, password: String!): Auth!
         updateUser(user: UserInput): Boolean
         createSchedule(ids: [ID!]!, userId: ID!): Boolean
+        # addFile(file: Upload!): File
     }
     schema {
         query: Query,

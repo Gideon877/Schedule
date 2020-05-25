@@ -3,11 +3,12 @@ const User = require('../../models/user');
 const Schedule = require('../../models/schedule');
 const { dateToString } = require('../helpers/date');
 const _ = require('lodash')
+const mongoose = require('mongoose');
 
 exports.createAndUpdateSchedule = async (params) => {
     try {
         const { userId, ids } = params;
-        await removeUsersFromWeekDays(params);
+        await removeUsersFromWeekDays(userId);
         return await updateUsersList(userId, ids);
     } catch (error) {
         console.log(error);
@@ -33,6 +34,7 @@ const removeUsersFromWeekDays = async (userId) => {
             day.save()
         })
     })
+    return Promise.all(days)
 }
 
 exports.shift = async () => await findWeekDays()

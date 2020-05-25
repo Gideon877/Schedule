@@ -1,11 +1,15 @@
 import React from 'react';
-import { List, Avatar } from 'antd';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { List, Avatar, Form, Row, Col } from 'antd';
+import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { useToasts } from 'react-toast-notifications';
 
+const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+};
 
 const GET_USER = gql`
     query getUser($userId: ID!) {
@@ -78,40 +82,44 @@ const UpdateUser = ({ userId }) => {
 
         render={({ errors, status, touched }) => {
 
-            return <Form>
-                <div className="form-group">
-                    <label htmlFor="firstName">First Name</label>
-                    <Field name="firstName" type="text" className={'form-control' + (errors.firstName && touched.firstName ? ' is-invalid' : '')} />
-                    <ErrorMessage name="firstName" component="div" className="invalid-feedback" />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="lastName">Last Name</label>
-                    <Field name="lastName" type="text" className={'form-control' + (errors.lastName && touched.lastName ? ' is-invalid' : '')} />
-                    <ErrorMessage name="lastName" component="div" className="invalid-feedback" />
-                </div>
-                <div className='form-group'>
-                    <label htmlFor='username'>Username</label>
-                    <Field name='username' disabled type='text' className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
-                    <ErrorMessage name='username' component='div' className='invalid-feedback' />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
-                    <ErrorMessage name="email" component="div" className="invalid-feedback" />
-                </div>
-                <div className='form-group'>
-                    <button type='submit' className='btn btn-primary mr-2'>Update</button>
-                    <button type='reset' className='btn btn-secondary mr-2'>Reset</button>
-                </div>
+            return <Row>
+                <Col span={8}>
+                    <Form layout="vertical">
+                        <div className="form-group">
+                            <label htmlFor="firstName">First Name</label>
+                            <Field name="firstName" type="text" className={'form-control' + (errors.firstName && touched.firstName ? ' is-invalid' : '')} />
+                            <ErrorMessage name="firstName" component="div" className="invalid-feedback" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="lastName">Last Name</label>
+                            <Field name="lastName" type="text" className={'form-control' + (errors.lastName && touched.lastName ? ' is-invalid' : '')} />
+                            <ErrorMessage name="lastName" component="div" className="invalid-feedback" />
+                        </div>
+                        <div className='form-group'>
+                            <label htmlFor='username'>Username</label>
+                            <Field name='username' disabled type='text' className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
+                            <ErrorMessage name='username' component='div' className='invalid-feedback' />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
+                            <ErrorMessage name="email" component="div" className="invalid-feedback" />
+                        </div>
+                        <div className='form-group'>
+                            <button type='submit' className='btn btn-primary mr-2'>Update</button>
+                            <button type='reset' className='btn btn-secondary mr-2'>Reset</button>
+                        </div>
 
 
-                {/*errors.api &&
+                        {/*errors.api &&
                     <Message attached='bottom' warning>
                         <Icon name='help' />
                                     Failed to update account details?&nbsp;
                                 </Message>
                 **/}
-            </Form>
+                    </Form>
+                </Col>
+            </Row>
         }}
     />
 }

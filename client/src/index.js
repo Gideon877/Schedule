@@ -62,6 +62,6 @@ ReactDOM.render(
     client={client}
   ><App />
   </ApolloProvider>,
-  document.querySelector('.container')
+  document.querySelector('.grid')
 );
 serviceWorker.unregister();

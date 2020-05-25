@@ -12,7 +12,10 @@ import {
 } from '@ant-design/icons';
 import Schedule from './Schedule';
 import UpdateUser from './UpdateUser';
+import UploadFile from './UploadFile'
+import Connections from '../connections/Connections';
 
+import { ConnectionTypePage } from '../../helpers/constants'
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -39,6 +42,11 @@ query getUserDetails($userId: ID!) {
             _id
         }
     }
+
+    weekdays {
+        _id
+        name
+    }
 }
 
 `
@@ -51,9 +59,9 @@ const UserMainLayout = ({userId}) => {
         setState({ collapsed });
     };
 
-    const [activeKey, setActiveKey] = useState('5')
+    const [activeKey, setActiveKey] = useState('4')
 
-    const { loading, error, data } = useQuery(GET_USER, {
+    const { loading, error, data, refetch } = useQuery(GET_USER, {
         variables: {
             userId
         }
@@ -63,8 +71,9 @@ const UserMainLayout = ({userId}) => {
 
     const user = data.getUser;
     const schedule = data.getUserSchedule;
+    const weekdays = data.weekdays
 
-    console.log({ user, schedule, activeKey });
+    // console.log({ user, schedule, activeKey });
 
 
     return (
@@ -73,7 +82,7 @@ const UserMainLayout = ({userId}) => {
                 <div className="logo" />
                 <Menu theme='light' onClick={({ item, key, keyPath, domEvent }) => {
                     setActiveKey(key)
-                    console.log({ item, key, keyPath, domEvent }, activeKey)
+                    // console.log({ item, key, keyPath, domEvent }, activeKey)
                 }} defaultSelectedKeys={activeKey} mode="inline">
                     <Menu.Item key="1" icon={<HomeOutlined />}>
                         Home (timeline)
@@ -110,13 +119,13 @@ const UserMainLayout = ({userId}) => {
                                 case '3':
                                     return <h4>Account</h4>
                                 case '4':
-                                    return <Schedule schedule={schedule} />
+                                    return <Schedule refetch={refetch} schedule={schedule} weekdays={weekdays} />
                                 case '5':
                                     return <UpdateUser userId={userId} />
                                 case '6':
-                                    return <h4>Following</h4>
+                                    return <Connections type={ConnectionTypePage.Following} /> 
                                 case '7':
-                                    return <h4>Find Connection</h4>
+                                    return <Connections type={ConnectionTypePage.NotFollowing} /> 
                                 default:
                                    return  <h5>Not found</h5>
                             }
