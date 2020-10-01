@@ -43,10 +43,13 @@ module.exports = {
 
             try {
                 // if (!context.isAuth) throw new Error(context.message);
-                let schedule = await Schedule.findOneAndUpdate({ user: userId }, { days: ids });
+                let schedule = await Schedule.findOne({ user: userId });
 
                 if (_.isNull(schedule)) {
                     schedule = new Schedule({ user: userId, days: ids })
+                    await schedule.save();
+                } else {
+                    schedule.days = ids;
                     await schedule.save();
                 }
 
@@ -54,6 +57,7 @@ module.exports = {
                 await createAndUpdateSchedule(params)
                 return true;
             } catch (error) {
+                console.log({error});
                 throw error;
             }
 

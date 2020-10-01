@@ -4,7 +4,7 @@ const weekdaysResolver = require('./days');
 const messageResolver = require('./message');
 const chatsResolver = require('./chats');
 
-const { users, getUser } = authResolver.Query;
+const { users, getUser, findUsers } = authResolver.Query;
 const { addUser, signIn, updateUser, disableUser } = authResolver.Mutation;
 const { getUserSchedule, schedule } = scheduleResolver.Query;
 const { createSchedule, updateUserSchedule } = scheduleResolver.Mutation;
@@ -19,6 +19,7 @@ const { addDays } = weekdaysResolver.Mutation;
 const Resolver = {
     Query: {
         users,
+        findUsers,
         getUser,
         schedule,
         getUserSchedule,

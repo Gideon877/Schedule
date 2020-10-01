@@ -1,14 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { ConnectionTypePage } from '../../helpers/constants'
+import MyConnections from './MyConnections'
+import FindConnections from './FindConnections'
 
-const Connections = ({ type }) => {
+const Connections = ({ type, userId }) => {
     switch (type) {
         case ConnectionTypePage.Following:
-            return <h4>My Connections</h4>
+            return <MyConnections />
             
         case ConnectionTypePage.NotFollowing:
-            return <h4>Add Connections</h4>
+            return <FindConnections userId={userId} />
     
         default:
             return <h4>Not Found</h4>

@@ -91,6 +91,8 @@ module.exports = gql`
 
     type Query {
         users: [User!]!
+        findUsers(userId: ID): [User!]!
+        
         weekdays: [Day!]!
         getUser(userId: ID!): User!
         schedule: [Schedule]
