@@ -5,7 +5,9 @@ const Days = require('../../models/days');
 const User = require('../../models/user');
 const _ = require('lodash')
 const { sortWeekDays } = require('../helpers/sortWeekDays');
+const { userType, EventTypes } = require('../helpers/constants');
 const { addUserSchedule, createAndUpdateSchedule } = require('./merge');
+const { PubSub } = require('apollo-server');
 
 module.exports = {
     Query: {
@@ -40,6 +42,7 @@ module.exports = {
     Mutation: {
         createSchedule: async (parent, params, context) => {
             const { ids, userId } = params;
+            const { pubsub } = context;
 
             try {
                 // if (!context.isAuth) throw new Error(context.message);
@@ -48,16 +51,29 @@ module.exports = {
                 if (_.isNull(schedule)) {
                     schedule = new Schedule({ user: userId, days: ids })
                     await schedule.save();
+
                 } else {
                     schedule.days = ids;
                     await schedule.save();
                 }
 
-                await User.updateOne({ _id: userId }, { schedule: ids });
-                await createAndUpdateSchedule(params)
+                await createAndUpdateSchedule(params);
+
+                await User.findOne({
+                    _id: userId
+                }, async (err, user) => {
+                    if(err) throw err;
+                     user.schedule = ids;
+                    await user.save();
+                });
+
+                // pubsub.publish(EventTypes.UpdateSchedule, {
+                //     onUpdateSchedule: await Days.find().populate('users')
+                // })
+
                 return true;
             } catch (error) {
-                console.log({error});
+                console.log({ error });
                 throw error;
             }
 

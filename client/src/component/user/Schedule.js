@@ -88,7 +88,6 @@ const Schedule = () => {
             });
     }
 
-    console.log(data.schedule)
 
     return <Row>
         <Col span={4}>

@@ -3,6 +3,7 @@ const scheduleResolver = require('./schedule');
 const weekdaysResolver = require('./days');
 const messageResolver = require('./message');
 const chatsResolver = require('./chats');
+const { userType, EventTypes } = require('../helpers/constants');
 
 const { users, getUser, findUsers } = authResolver.Query;
 const { addUser, signIn, updateUser, disableUser } = authResolver.Mutation;
@@ -37,6 +38,11 @@ const Resolver = {
         addDays,
         createMessage,
         createChat
+    },
+    Subscription: {
+        onUpdateSchedule: {
+            subscribe: (_, __, { pubsub }) => pubsub.asyncIterator(EventTypes.UpdateSchedule)
+        }
     }
 
 }
