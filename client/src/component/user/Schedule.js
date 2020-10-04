@@ -53,7 +53,7 @@ const Schedule = () => {
 
     if (loading) return <h6>Loading.......</h6>
 
-    const { days, user } = data.getUserSchedule;
+    const { days, user } = data.getUserSchedule || [];
     const dayIds = sortWeekDays(days).map(day => day._id)
 
     const onSuccess = message => {
@@ -91,16 +91,17 @@ const Schedule = () => {
 
     return <Row>
         <Col span={4}>
-            <List
+            {(data && data.schedule)   && <List
                 itemLayout="horizontal"
                 dataSource={data.schedule}
                 renderItem={item => (
                     <List.Item id={item._id}>
                         <List.Item.Meta
+                            key={item._id}
                             icon={<ClockCircleTwoTone />}
                             title={item.name}
                             description={<div id={item._id}>
-                                <Progress type="circle" percent={item.percentage} width={60} id={item._id} /> {'  '}
+                                <Progress type="circle" percent={item.percentage} width={60} key={item._id} /> {'  '}
                                 <ButtonGroup>
                                     <Button id={item._id} disabled={!dayIds.includes(item._id)} icon={<MinusOutlined onClick={() => onRemoveDay(item._id)} />} />
                                     <Button id={item._id} disabled={dayIds.includes(item._id)} icon={<PlusOutlined onClick={() => onAddDay(item._id)} />} />
@@ -109,7 +110,7 @@ const Schedule = () => {
                         />
                     </List.Item>
                 )}
-            />
+            /> }
         </Col>
 
         <Col span={8}>

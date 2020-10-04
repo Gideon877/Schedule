@@ -94,10 +94,10 @@ const UserMainLayout = ({userId}) => {
                         <Menu.Item key="4">Schedule</Menu.Item>
                         <Menu.Item key="5">Update</Menu.Item>
                     </SubMenu>
-                    <SubMenu key="sub2" icon={<TeamOutlined />} title="Connections">
+                    {/** <SubMenu key="sub2" icon={<TeamOutlined />} title="Connections">
                         <Menu.Item key="6">Following</Menu.Item>
                         <Menu.Item key="7">Find Connection</Menu.Item>
-                    </SubMenu>
+                    </SubMenu> */}
                 </Menu>
             </Sider>
             <Layout className="site-layout">
@@ -122,9 +122,9 @@ const UserMainLayout = ({userId}) => {
                                 case '5':
                                     return <UpdateUser userId={userId} />
                                 case '6':
-                                    return <Connections type={ConnectionTypePage.Following} /> 
+                                    return <Connections userId={userId} type={ConnectionTypePage.Following} /> 
                                 case '7':
-                                    return <Connections type={ConnectionTypePage.NotFollowing} /> 
+                                    return <Connections userId={userId} type={ConnectionTypePage.NotFollowing} /> 
                                 default:
                                    return  <h5>Not found</h5>
                             }

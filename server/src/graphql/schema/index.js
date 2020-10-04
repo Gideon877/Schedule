@@ -91,6 +91,8 @@ module.exports = gql`
 
     type Query {
         users: [User!]!
+        findUsers(userId: ID): [User!]!
+        
         weekdays: [Day!]!
         getUser(userId: ID!): User!
         schedule: [Schedule]
@@ -110,8 +112,14 @@ module.exports = gql`
         createMessage(sender: ID! receiver: ID! message: String!): Message!
         createChat(sender: ID! receiver: ID!): Chat!
     }
+
+    type Subscription {
+        onUpdateSchedule: [Schedule]
+    }
+
     schema {
         query: Query,
-        mutation: Mutation
+        mutation: Mutation,
+        subscription: Subscription
     }
 `

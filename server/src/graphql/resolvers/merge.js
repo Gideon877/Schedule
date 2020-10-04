@@ -20,7 +20,6 @@ exports.createAndUpdateSchedule = async (params) => {
 const updateUsersList = async (userId, dayListIds) => {
     return await dayListIds.forEach(async (_id) => {
         const current = await Days.findOne({ _id });
-        current.users.pull(userId)
         current.users.push(userId)
         await current.save();
     });
@@ -59,13 +58,12 @@ const createWeek = async () => {
     try {
         const weekDay = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         const isAdded = await Days.find();
-        if (isAdded.length) throw new Error('Week days already created')
+        if (isAdded.length) throw new Error('Week days already created');
         const weekDays = weekDay.map(day => {
             return new Days({
                 name: day
             })
         })
-        // console.log({ weekDays })
 
         await Days.insertMany(weekDays);
     } catch (error) {

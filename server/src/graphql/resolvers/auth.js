@@ -7,6 +7,21 @@ const { userType } = require('../helpers/constants');
 
 module.exports = {
     Query: {
+        findUsers: async (parent, params, context) => {
+            try {
+                const users = await User.find({
+                    _id: { $ne: params.userId }
+                }).populate('schedule')
+                return users.map(user => {
+                    return {
+                        ...user._doc
+                    }
+                })
+            } catch (error) {
+                throw error;
+            }
+        },
+
         users: async (parent, params, context) => {
             try {
                 const users = await User.find().populate('schedule')

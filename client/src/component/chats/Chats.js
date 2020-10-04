@@ -32,12 +32,13 @@ const Chats = () => {
     if (loading) return <h5>Loading chats.....</h5>
 
     // console.log(data, userId)
+    const { users } = data || [];
 
     return <Row>
         <Col span={8}>
             {/** <h4 align='center'>List of active chats</h4> */}
             <List
-                dataSource={data.users}
+                dataSource={users}
                 renderItem={item => (
                     ( userId !== item._id) && <List.Item key={item._id}>
                         <List.Item.Meta
