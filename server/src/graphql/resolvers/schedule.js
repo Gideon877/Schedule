@@ -62,8 +62,8 @@ module.exports = {
                 await User.findOne({
                     _id: userId
                 }, async (err, user) => {
-                    if(err) throw err;
-                     user.schedule = ids;
+                    if (err) throw err;
+                    user.schedule = ids;
                     await user.save();
                 });
 

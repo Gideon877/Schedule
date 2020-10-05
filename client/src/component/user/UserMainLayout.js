@@ -15,6 +15,7 @@ import Connections from '../connections/Connections';
 
 import { ConnectionTypePage } from '../../helpers/constants'
 import Chats from '../chats/Chats';
+import Home from './Home';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -74,7 +75,6 @@ const UserMainLayout = ({userId}) => {
 
     // console.log({ user, schedule, activeKey });
 
-
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider collapsible collapsed={state.collapsed} onCollapse={onCollapse}>
@@ -112,7 +112,7 @@ const UserMainLayout = ({userId}) => {
                         {(() => {
                             switch (activeKey) {
                                 case '1':
-                                    return <h4>Home Page</h4>
+                                    return <Home />
                                 case '2':
                                     return <Chats />
                                 case '3':

@@ -8,6 +8,7 @@ import { AuthContext } from '../../context/auth-context';
 import { sortWeekDays } from '../../helpers/lib'
 
 const ButtonGroup = Button.Group;
+const _ = require('lodash');
 
 const ADD_SCHEDULE = gql`
     mutation createSchedule($userId: ID!, $ids: [ID!]!) {
@@ -54,7 +55,7 @@ const Schedule = () => {
     if (loading) return <h6>Loading.......</h6>
 
     const { days, user } = data.getUserSchedule || [];
-    const dayIds = sortWeekDays(days).map(day => day._id)
+    const dayIds = (_.isEmpty(days)) ? [] : sortWeekDays(days).map(day => day._id)
 
     const onSuccess = message => {
         refetch();
@@ -103,8 +104,8 @@ const Schedule = () => {
                             description={<div id={item._id}>
                                 <Progress type="circle" percent={item.percentage} width={60} key={item._id} /> {'  '}
                                 <ButtonGroup>
-                                    <Button id={item._id} disabled={!dayIds.includes(item._id)} icon={<MinusOutlined onClick={() => onRemoveDay(item._id)} />} />
-                                    <Button id={item._id} disabled={dayIds.includes(item._id)} icon={<PlusOutlined onClick={() => onAddDay(item._id)} />} />
+                                    <Button id={item._id} disabled={!dayIds.includes(item._id) || Number(item.percentage) >= 100 } icon={<MinusOutlined onClick={() => onRemoveDay(item._id)} />} />
+                                    <Button id={item._id} disabled={dayIds.includes(item._id) || Number(item.percentage) >= 100} icon={<PlusOutlined onClick={() => onAddDay(item._id)} />} />
                                 </ButtonGroup>
                             </div>}
                         />
